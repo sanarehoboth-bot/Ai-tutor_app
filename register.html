@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — TutorBuddy Pro Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#6C63FF;--primary-dark:#4F46E5;--primary-light:#EEF0FF;
+  --secondary:#FF6B6B;--teal:#4ECDC4;--green:#06D6A0;
+  --bg:#F4F3FF;--card:#fff;--text:#2D2D48;
+  --text-muted:#8585A4;--border:#E8E6FF;
+  --radius:18px;--radius-sm:12px;--radius-xs:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+h1,h2,h3,button{font-family:'Nunito',sans-serif}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--primary),#A78BFA);padding:20px 24px;text-align:center}
+.header-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);font-size:13px;font-weight:700;margin-bottom:10px;cursor:pointer;text-decoration:none}
+.header-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:5px}
+.header-icon{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px}
+.header-name{font-size:18px;font-weight:900;color:#fff}
+.header-sub{font-size:12px;color:rgba(255,255,255,.75);font-weight:600}
+
+/* WRAPPER */
+.wrapper{max-width:540px;margin:0 auto;padding:24px 16px 60px}
+
+/* CARD */
+.form-card{background:var(--card);border-radius:var(--radius);border:2px solid var(--border);box-shadow:0 4px 20px rgba(108,99,255,.10);overflow:hidden;margin-bottom:18px}
+.fc-head{padding:18px 20px 14px;border-bottom:2px solid var(--border);background:linear-gradient(135deg,#FAFAFE,#F0EEFF)}
+.fc-title{font-size:16px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.fc-sub{font-size:12px;color:var(--text-muted);font-weight:600}
+.fc-body{padding:18px 20px}
+
+/* FIELDS */
+.field{margin-bottom:14px}
+.field-label{font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.req{color:var(--secondary)}
+.field-input{width:100%;border:2px solid var(--border);border-radius:var(--radius-xs);padding:11px 13px;font-size:14px;font-family:'Nunito Sans',sans-serif;color:var(--text);background:var(--bg);outline:none;transition:all .2s;-webkit-appearance:none;appearance:none}
+.field-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(108,99,255,.10)}
+.field-input::placeholder{color:#C0BDDB}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-hint{font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:500}
+.field-err{font-size:11px;color:var(--secondary);font-weight:700;margin-top:4px;display:none}
+.field-input.err{border-color:var(--secondary)}
+
+/* SUBJECTS */
+.subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:5px}
+.subj-btn{display:flex;align-items:center;gap:7px;padding:9px 12px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;cursor:pointer;transition:all .18s;font-size:13px;font-weight:700;color:var(--text);font-family:'Nunito Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.subj-btn.sel{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.subj-btn:active{transform:scale(.97)}
+
+/* PLAN CARDS */
+.plan-list{display:flex;flex-direction:column;gap:9px;margin-top:5px}
+.plan-card{display:flex;align-items:center;gap:13px;padding:13px 15px;border:2px solid var(--border);border-radius:var(--radius-sm);background:#fff;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.plan-card.sel{border-color:var(--primary);background:var(--primary-light)}
+.plan-card:active{transform:scale(.98)}
+.plan-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.plan-radio.sel{border-color:var(--primary);background:var(--primary)}
+.plan-radio.sel::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff}
+.plan-info{flex:1}
+.plan-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:1px}
+.plan-card.sel .plan-name{color:var(--primary)}
+.plan-desc{font-size:11px;color:var(--text-muted);font-weight:600}
+.plan-price{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--primary)}
+
+/* PAYMENT BOX */
+.pay-box{background:linear-gradient(135deg,#0A0A2E,#1a1060);border-radius:var(--radius);padding:22px;margin-bottom:18px}
+.pay-box-title{font-size:15px;font-weight:900;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.pay-box-sub{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:16px;font-weight:600}
+.pay-amount-row{background:rgba(255,255,255,.08);border-radius:var(--radius-xs);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pa-label{font-size:11px;color:rgba(255,255,255,.5);font-weight:700}
+.pa-amount{font-family:'Nunito',sans-serif;font-size:26px;font-weight:900;color:#fff}
+.pay-methods{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pay-method{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:7px;padding:7px 11px;font-size:12px;font-weight:700;color:#fff}
+
+/* TAP TO PAY */
+.tap-pay{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;background:linear-gradient(135deg,#06D6A0,#4ECDC4);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(6,214,160,.3);margin-bottom:12px;text-decoration:none;text-align:center}
+.tap-pay:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(6,214,160,.4)}
+.tap-pay-sub{font-size:11px;opacity:.85;display:block;font-weight:600}
+
+.upi-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius-xs);padding:11px 14px;margin-bottom:10px}
+.upi-text{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#A78BFA;flex:1}
+.copy-upi{background:var(--primary);color:#fff;border:none;border-radius:6px;padding:6px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;flex-shrink:0}
+.pay-note{font-size:11px;color:rgba(255,255,255,.4);line-height:1.6;background:rgba(255,255,255,.05);padding:9px 12px;border-radius:7px;border-left:3px solid var(--primary)}
+
+/* SUBMIT */
+.submit-card{background:var(--card);border-radius:var(--radius);border:2px solid var(--border);padding:20px;margin-bottom:18px}
+.submit-checklist{list-style:none;margin-bottom:18px}
+.submit-checklist li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text-muted);padding:6px 0;border-bottom:1px solid var(--border)}
+.submit-checklist li:last-child{border-bottom:none}
+.submit-checklist li.done{color:var(--green)}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:30px;padding:15px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 6px 20px rgba(108,99,255,.35);transition:all .2s}
+.submit-btn:hover{transform:translateY(-2px)}
+.submit-note{font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px;font-weight:600}
+
+/* SUCCESS */
+.success{display:none;text-align:center;padding:40px 16px}
+.success-icon{font-size:68px;margin-bottom:14px;animation:pop .5s ease}
+@keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.success-title{font-size:24px;font-weight:900;color:var(--text);margin-bottom:8px}
+.success-sub{font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:22px}
+.summary-card{background:var(--primary-light);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;text-align:left}
+.sum-title{font-size:12px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.sum-row{display:flex;gap:8px;font-size:13px;color:var(--text);margin-bottom:6px;font-weight:600}
+.sum-label{color:var(--text-muted);min-width:80px;flex-shrink:0;font-weight:700}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:30px;padding:14px;font-size:15px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 6px 20px rgba(37,211,102,.3);margin-bottom:12px;text-decoration:none}
+.back-btn{display:block;width:100%;background:var(--primary-light);color:var(--primary);border:2px solid var(--primary);border-radius:30px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;text-align:center;text-decoration:none}
+
+/* SECURITY */
+.security{text-align:center;padding:16px 0}
+.sec-badge{display:inline-flex;align-items:center;gap:7px;background:#ECFDF5;border:1px solid #A7F3D0;color:#059669;font-size:12px;font-weight:700;padding:8px 16px;border-radius:20px}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--text);color:#fff;padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;z-index:999;opacity:0;transition:all .3s;font-family:'Nunito',sans-serif;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{background:#059669}
+
+@media(max-width:400px){.field-row,.subj-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="index.html" class="header-back">← Back to TutorBuddy Pro Hub</a>
+  <div class="header-logo">
+    <div class="header-icon">🎓</div>
+    <div class="header-name">TutorBuddy Pro Hub</div>
+  </div>
+  <div class="header-sub">Student Registration Form</div>
+</div>
+
+<div class="wrapper">
+
+  <!-- ══ FORM ══ -->
+  <div id="formSection">
+
+    <!-- Child Details -->
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">👦 Child Details</div>
+        <div class="fc-sub">Fill in your child's information accurately</div>
+      </div>
+      <div class="fc-body">
+        <div class="field">
+          <div class="field-label">Child Full Name <span class="req">*</span></div>
+          <input type="text" class="field-input" id="f-name" placeholder="e.g. Arjun Mehta" autocomplete="off">
+          <div class="field-err" id="e-name">Please enter child name</div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">Age <span class="req">*</span></div>
+            <select class="field-input" id="f-age">
+              <option value="">Select</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option>
+              <option>9</option><option>10</option><option>11</option><option>12</option><option>13</option>
+            </select>
+            <div class="field-err" id="e-age">Please select age</div>
+          </div>
+          <div class="field">
+            <div class="field-label">Class / Grade <span class="req">*</span></div>
+            <select class="field-input" id="f-grade">
+              <option value="">Select</option>
+              <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+              <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
+            </select>
+            <div class="field-err" id="e-grade">Please select grade</div>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">School Name <span class="req">*</span></div>
+          <input type="text" class="field-input" id="f-school" placeholder="e.g. Delhi Public School" autocomplete="off">
+          <div class="field-err" id="e-school">Please enter school name</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Board <span class="req">*</span></div>
+          <select class="field-input" id="f-board">
+            <option value="">Select board</option>
+            <option>CBSE</option><option>ICSE</option><option>State Board</option>
+            <option>IB</option><option>IGCSE</option><option>Other</option>
+          </select>
+          <div class="field-err" id="e-board">Please select board</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Subjects Needed <span class="req">*</span></div>
+          <div class="subj-grid">
+            <button class="subj-btn" onclick="toggleSubj(this,'Maths')" type="button">📐 Maths</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'Science')" type="button">🔬 Science</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'English')" type="button">📖 English</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'Hindi')" type="button">🇮🇳 Hindi</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'Social Studies')" type="button">🌍 Social Studies</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'Computers')" type="button">💻 Computers</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'EVS')" type="button">🌿 EVS</button>
+            <button class="subj-btn" onclick="toggleSubj(this,'Drawing')" type="button">🎨 Drawing</button>
+          </div>
+          <div class="field-err" id="e-subj">Please select at least one subject</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parent Details -->
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">👨‍👩‍👧 Parent Details</div>
+        <div class="fc-sub">We will contact you on WhatsApp</div>
+      </div>
+      <div class="fc-body">
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">Parent Name <span class="req">*</span></div>
+            <input type="text" class="field-input" id="f-parent" placeholder="e.g. Priya Mehta" autocomplete="off">
+            <div class="field-err" id="e-parent">Please enter parent name</div>
+          </div>
+          <div class="field">
+            <div class="field-label">Relation</div>
+            <select class="field-input" id="f-rel">
+              <option>Mother</option><option>Father</option><option>Guardian</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">WhatsApp Number <span class="req">*</span></div>
+          <input type="tel" class="field-input" id="f-wa" placeholder="10-digit number" maxlength="10" inputmode="numeric">
+          <div class="field-hint">📲 Progress reports will be sent to this number</div>
+          <div class="field-err" id="e-wa">Please enter a valid 10-digit number</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan Selection -->
+    <div class="form-card">
+      <div class="fc-head">
+        <div class="fc-title">💳 Choose Your Plan</div>
+        <div class="fc-sub">All plans include full dashboard access</div>
+      </div>
+      <div class="fc-body">
+        <div class="plan-list">
+          <div class="plan-card" onclick="selectPlan(this,'Small Group','500','Monthly - Up to 10 students')">
+            <div class="plan-radio" id="pr-500"></div>
+            <div class="plan-info"><div class="plan-name">Small Group</div><div class="plan-desc">Monthly · Up to 10 students</div></div>
+            <div class="plan-price">₹500</div>
+          </div>
+          <div class="plan-card sel" onclick="selectPlan(this,'Individual Lifetime','999','One-time - Lifetime access')">
+            <div class="plan-radio sel" id="pr-999"></div>
+            <div class="plan-info"><div class="plan-name">Individual ⭐ Popular</div><div class="plan-desc">One-time · Lifetime access</div></div>
+            <div class="plan-price">₹999</div>
+          </div>
+          <div class="plan-card" onclick="selectPlan(this,'Large Event','1000','Per event - 20+ students')">
+            <div class="plan-radio" id="pr-1000"></div>
+            <div class="plan-info"><div class="plan-name">Large Event</div><div class="plan-desc">Per event · 20+ students</div></div>
+            <div class="plan-price">₹1000</div>
+          </div>
+        </div>
+        <div class="field-err" id="e-plan">Please select a plan</div>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="pay-box">
+      <div class="pay-box-title">🇮🇳 Pay via GPay / UPI</div>
+      <div class="pay-box-sub">Tap the button below — opens your UPI app directly</div>
+      <div class="pay-amount-row">
+        <div><div class="pa-label">Amount</div><div class="pa-amount" id="payAmt">₹999</div></div>
+        <div style="text-align:right"><div class="pa-label">Plan</div><div style="font-size:13px;font-weight:800;color:#fff" id="payPlan">Individual Lifetime</div></div>
+      </div>
+      <div class="pay-methods">
+        <div class="pay-method">📱 GPay</div>
+        <div class="pay-method">📲 PhonePe</div>
+        <div class="pay-method">🏦 Any UPI</div>
+        <div class="pay-method">💳 Paytm</div>
+      </div>
+      <!-- TAP TO PAY — opens UPI app directly on mobile -->
+      <a id="tapPayBtn" href="upi://pay?pa=stheodor@oksbi&pn=TutorBuddy+Pro+Hub&am=999&cu=INR&tn=TutorBuddy+Registration" class="tap-pay">
+        📱 Tap to Pay ₹999 via GPay
+        <span class="tap-pay-sub">Opens your UPI app automatically</span>
+      </a>
+      <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.35);margin-bottom:10px">or copy UPI ID manually</div>
+      <div class="upi-row">
+        <span class="upi-text">stheodor@oksbi</span>
+        <button class="copy-upi" onclick="copyUPI()">Copy</button>
+      </div>
+      <div class="pay-note">After paying: Screenshot the confirmation and keep it ready. The tutor will verify and activate your child within 2 hours via WhatsApp.</div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-card">
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:12px">Please confirm before submitting:</div>
+      <ul class="submit-checklist">
+        <li id="chk1">⬜ Child details filled correctly</li>
+        <li id="chk2">⬜ Plan selected</li>
+        <li id="chk3">⬜ Payment made via UPI</li>
+        <li id="chk4">⬜ Payment screenshot saved</li>
+      </ul>
+      <button class="submit-btn" onclick="submitForm()">🚀 Submit Registration</button>
+      <div class="submit-note">🔒 Your data is private and visible only to your tutor</div>
+    </div>
+
+  </div><!-- /formSection -->
+
+  <!-- SUCCESS -->
+  <div class="success" id="successSection">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Registration Complete!</div>
+    <div class="success-sub">Your child has been registered. The tutor will verify your payment and contact you on WhatsApp within 2 hours.</div>
+    <div class="summary-card">
+      <div class="sum-title">Registration Summary</div>
+      <div class="sum-row"><span class="sum-label">Child</span><span id="sum-name"></span></div>
+      <div class="sum-row"><span class="sum-label">Age/Grade</span><span id="sum-grade"></span></div>
+      <div class="sum-row"><span class="sum-label">School</span><span id="sum-school"></span></div>
+      <div class="sum-row"><span class="sum-label">Board</span><span id="sum-board"></span></div>
+      <div class="sum-row"><span class="sum-label">Subjects</span><span id="sum-subj"></span></div>
+      <div class="sum-row"><span class="sum-label">Parent</span><span id="sum-parent"></span></div>
+      <div class="sum-row"><span class="sum-label">WhatsApp</span><span id="sum-wa"></span></div>
+      <div class="sum-row"><span class="sum-label">Plan</span><span id="sum-plan"></span></div>
+      <div class="sum-row"><span class="sum-label">Amount</span><span id="sum-amount" style="color:var(--green);font-weight:900"></span></div>
+    </div>
+    <a id="waSendBtn" href="#" target="_blank" class="wa-btn">💬 Send Payment Confirmation on WhatsApp</a>
+    <a href="index.html" class="back-btn">← Back to TutorBuddy Pro Hub</a>
+  </div>
+
+  <div class="security">
+    <span class="sec-badge">🔒 Secure · Zero Commission · Data visible to Tutor only</span>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// STATE
+let selSubjects = [];
+let selPlan = { name:'Individual Lifetime', amount:'999', desc:'One-time - Lifetime access' };
+
+// SUBJECTS
+function toggleSubj(btn, val) {
+  btn.classList.toggle('sel');
+  if(btn.classList.contains('sel')) {
+    if(!selSubjects.includes(val)) selSubjects.push(val);
+  } else {
+    selSubjects = selSubjects.filter(s => s !== val);
+  }
+  updateChecklist();
+}
+
+// PLAN
+function selectPlan(card, name, amount, desc) {
+  document.querySelectorAll('.plan-card').forEach(c => { c.classList.remove('sel'); c.querySelector('.plan-radio').classList.remove('sel'); });
+  card.classList.add('sel');
+  card.querySelector('.plan-radio').classList.add('sel');
+  selPlan = { name, amount, desc };
+  document.getElementById('payAmt').textContent = '₹' + amount;
+  document.getElementById('payPlan').textContent = name;
+  // Update tap-to-pay link amount
+  document.getElementById('tapPayBtn').href = 'upi://pay?pa=stheodor@oksbi&pn=TutorBuddy+Pro+Hub&am=' + amount + '&cu=INR&tn=TutorBuddy+Registration';
+  updateChecklist();
+}
+
+// CHECKLIST
+function updateChecklist() {
+  const name = document.getElementById('f-name').value.trim();
+  const wa   = document.getElementById('f-wa').value.trim();
+  setChk('chk1', name.length > 1 && wa.length === 10);
+  setChk('chk2', !!selPlan.name);
+}
+function setChk(id, done) {
+  const el = document.getElementById(id);
+  const labels = { chk1:'Child details filled correctly', chk2:'Plan selected', chk3:'Payment made via UPI', chk4:'Payment screenshot saved' };
+  el.textContent = (done ? '✅ ' : '⬜ ') + labels[id];
+  done ? el.classList.add('done') : el.classList.remove('done');
+}
+document.getElementById('f-name').addEventListener('input', updateChecklist);
+document.getElementById('f-wa').addEventListener('input', updateChecklist);
+
+// COPY UPI
+function copyUPI() {
+  const upi = 'stheodor@oksbi';
+  if(navigator.clipboard) { navigator.clipboard.writeText(upi); }
+  else { const el=document.createElement('textarea');el.value=upi;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el); }
+  toast('UPI ID copied! Open GPay and paste to pay.', 'ok');
+}
+
+// VALIDATE
+function validate() {
+  let ok = true;
+  const checks = [
+    { id:'f-name',   err:'e-name',   fn: v => v.trim().length > 1 },
+    { id:'f-age',    err:'e-age',    fn: v => v !== '' },
+    { id:'f-grade',  err:'e-grade',  fn: v => v !== '' },
+    { id:'f-school', err:'e-school', fn: v => v.trim().length > 1 },
+    { id:'f-board',  err:'e-board',  fn: v => v !== '' },
+    { id:'f-parent', err:'e-parent', fn: v => v.trim().length > 1 },
+    { id:'f-wa',     err:'e-wa',     fn: v => /^\d{10}$/.test(v.trim()) }
+  ];
+  checks.forEach(c => {
+    const el=document.getElementById(c.id), er=document.getElementById(c.err);
+    if(!c.fn(el.value)) { el.classList.add('err'); er.style.display='block'; if(ok){el.scrollIntoView({behavior:'smooth',block:'center'});ok=false;} }
+    else { el.classList.remove('err'); er.style.display='none'; }
+  });
+  if(selSubjects.length===0) {
+    document.getElementById('e-subj').style.display='block';
+    if(ok){document.getElementById('e-subj').scrollIntoView({behavior:'smooth',block:'center'});ok=false;}
+  } else { document.getElementById('e-subj').style.display='none'; }
+  return ok;
+}
+
+// SUBMIT
+function submitForm() {
+  if(!validate()) { toast('Please fill all required fields', 'err'); return; }
+  const data = {
+    name:    document.getElementById('f-name').value.trim(),
+    age:     document.getElementById('f-age').value,
+    grade:   document.getElementById('f-grade').value,
+    school:  document.getElementById('f-school').value.trim(),
+    board:   document.getElementById('f-board').value,
+    subjects:selSubjects.join(', '),
+    parent:  document.getElementById('f-parent').value.trim(),
+    rel:     document.getElementById('f-rel').value,
+    wa:      document.getElementById('f-wa').value.trim(),
+    plan:    selPlan.name,
+    amount:  '₹' + selPlan.amount,
+    time:    new Date().toLocaleString()
+  };
+  // Save to localStorage
+  const regs = JSON.parse(localStorage.getItem('tbph_regs')||'[]');
+  regs.push(data);
+  localStorage.setItem('tbph_regs', JSON.stringify(regs));
+
+  // Fill summary
+  document.getElementById('sum-name').textContent   = data.name;
+  document.getElementById('sum-grade').textContent  = data.age + ' yrs · ' + data.grade;
+  document.getElementById('sum-school').textContent = data.school;
+  document.getElementById('sum-board').textContent  = data.board;
+  document.getElementById('sum-subj').textContent   = data.subjects;
+  document.getElementById('sum-parent').textContent = data.parent + ' (' + data.rel + ')';
+  document.getElementById('sum-wa').textContent     = data.wa;
+  document.getElementById('sum-plan').textContent   = data.plan;
+  document.getElementById('sum-amount').textContent = data.amount;
+
+  // WhatsApp message — plain English, to parent's number
+  const waMsg = encodeURIComponent(
+    'Hello! Registration confirmed for ' + data.name + ' at TutorBuddy Pro Hub. ' +
+    'Plan: ' + data.plan + '. Amount: ' + data.amount + '. ' +
+    'Please send your payment screenshot to confirm. ' +
+    'Your child will be activated within 2 hours. Thank you!'
+  );
+  document.getElementById('waSendBtn').href = 'https://wa.me/91' + data.wa + '?text=' + waMsg;
+
+  // Show success
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('successSection').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast('Registration submitted! 🎉', 'ok');
+}
+
+// TOAST
+function toast(msg, type) {
+  const t=document.getElementById('toast');
+  t.textContent = (type==='ok'?'✅ ':'❌ ') + msg;
+  t.className = 'toast show' + (type==='ok'?' ok':'');
+  setTimeout(()=>t.className='toast',3000);
+}
+</script>
+</body>
+</html>
