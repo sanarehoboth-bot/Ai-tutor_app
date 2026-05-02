@@ -3,28 +3,893 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Dashboard — TutorBuddy</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<title>Pro Dashboard — TutorBuddy Pro Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root { --primary:#6C63FF; --bg:#F4F3FF; }
-body { font-family:'Nunito',sans-serif; background:var(--bg); padding:20px; margin:0; }
-.card { background:#fff; border-radius:20px; padding:25px; margin-bottom:20px; box-shadow:0 4px 15px rgba(108,99,255,0.1); border:1px solid #E8E6FF; }
-.reg-card { background:linear-gradient(135deg, #6C63FF, #A78BFA); color:#fff; }
-.btn-reg { background:#fff; color:#6C63FF; padding:12px 24px; border-radius:30px; text-decoration:none; display:inline-block; font-weight:900; margin-top:15px; }
-.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
-.stat-box { background:#fff; padding:20px; border-radius:15px; border-bottom:4px solid #6C63FF; }
-.stat-val { font-size:28px; font-weight:900; display:block; }
-.stat-label { font-size:12px; color:#8585A4; }
+:root{
+  --primary:#6C63FF;--primary-dark:#4F46E5;--primary-light:#EEF0FF;
+  --secondary:#FF6B6B;--teal:#4ECDC4;--green:#06D6A0;
+  --orange:#FF9A3C;--yellow:#FFD93D;--pink:#FF6B9D;
+  --bg:#F4F3FF;--card:#fff;--text:#2D2D48;
+  --text-muted:#8585A4;--border:#E8E6FF;
+  --shadow:0 4px 20px rgba(108,99,255,.10);
+  --shadow-hover:0 10px 36px rgba(108,99,255,.20);
+  --radius:18px;--radius-sm:10px;--radius-xs:7px;
+  --sidebar:248px;--topbar:68px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,h5,button,.btn{font-family:'Nunito',sans-serif}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#C4C0F0;border-radius:99px}
+
+/* ══════════════════════════════════════
+   FIRST-TIME SETUP SCREEN
+   Tutor enters their OWN name + UPI here
+   Your UPI never appears in this screen
+══════════════════════════════════════ */
+.setup-overlay{position:fixed;inset:0;z-index:9999;background:linear-gradient(145deg,#0A0A2E 0%,#1a1060 55%,#0d2240 100%);display:flex;align-items:center;justify-content:center;padding:20px}
+.setup-overlay.gone{display:none}
+.setup-dots{position:absolute;inset:0;opacity:.03;background-image:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1px);background-size:32px 32px}
+.setup-card{background:#fff;border-radius:24px;width:100%;max-width:460px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5);position:relative;z-index:2}
+.setup-head{background:linear-gradient(135deg,var(--primary) 0%,#A78BFA 100%);padding:30px 28px 24px;text-align:center}
+.setup-emoji{font-size:44px;margin-bottom:10px}
+.setup-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:5px}
+.setup-subtitle{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;font-weight:600}
+.setup-body{padding:28px}
+.setup-notice{background:var(--primary-light);border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:22px;border-left:4px solid var(--primary)}
+.setup-notice-text{font-size:13px;color:var(--primary);font-weight:700;line-height:1.6}
+.setup-field{margin-bottom:16px}
+.setup-label{font-size:12px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block}
+.setup-input{width:100%;border:2px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;font-family:'Nunito Sans',sans-serif;color:var(--text);background:var(--bg);outline:none;transition:all .2s}
+.setup-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(108,99,255,.10)}
+.setup-input::placeholder{color:#C0BDDB}
+.setup-hint{font-size:11px;color:var(--text-muted);margin-top:5px;font-weight:500;line-height:1.5}
+.setup-submit{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:30px;padding:15px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;box-shadow:0 6px 20px rgba(108,99,255,.35);margin-top:4px}
+.setup-submit:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(108,99,255,.42)}
+.setup-secure{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11px;color:var(--text-muted);margin-top:14px;font-weight:600}
+
+/* ══ APP LAYOUT ══ */
+.app{display:flex;min-height:100vh}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar);min-height:100vh;background:#fff;border-right:2px solid var(--border);display:flex;flex-direction:column;padding-bottom:24px;position:fixed;top:0;left:0;z-index:100;box-shadow:4px 0 28px rgba(108,99,255,.07);transition:transform .3s}
+.logo-area{padding:22px 20px 18px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:12px}
+.logo-icon{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--primary) 0%,#A78BFA 100%);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(108,99,255,.32);flex-shrink:0}
+.logo-text{font-size:18px;font-weight:900;color:var(--primary)}
+.logo-sub{font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+.nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:3px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all .18s;color:var(--text-muted);font-size:13.5px;font-weight:700;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--primary-light);color:var(--primary)}
+.nav-item.active{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(108,99,255,.32)}
+.nav-item .ni{font-size:17px;width:22px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--secondary);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px}
+.sidebar-footer{padding:0 14px}
+
+/* TUTOR PROFILE IN SIDEBAR */
+.tutor-profile-card{background:linear-gradient(135deg,var(--primary) 0%,#A78BFA 100%);border-radius:var(--radius-sm);padding:14px;color:#fff}
+.tpc-avatar{font-size:24px;margin-bottom:6px}
+.tpc-name{font-size:13px;font-weight:900;margin-bottom:2px}
+.tpc-upi{font-size:10px;opacity:.75;margin-bottom:8px;word-break:break-all;background:rgba(0,0,0,.15);padding:4px 8px;border-radius:5px;font-weight:700}
+.tpc-edit{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;transition:all .18s}
+.tpc-edit:hover{background:rgba(255,255,255,.3)}
+
+/* ══ MAIN ══ */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ══ TOPBAR ══ */
+.topbar{height:var(--topbar);background:#fff;border-bottom:2px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(108,99,255,.06)}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.page-title{font-size:20px;font-weight:900;color:var(--text)}
+.page-sub{font-size:11px;color:var(--text-muted);font-weight:600;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--bg);border:2px solid var(--border);border-radius:30px;padding:8px 16px;transition:all .2s}
+.search-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,.1)}
+.search-wrap input{border:none;background:none;outline:none;font-size:13px;color:var(--text);width:150px;font-family:'Nunito Sans',sans-serif}
+.hamburger{display:none;background:none;border:2px solid var(--border);border-radius:var(--radius-xs);padding:6px 9px;cursor:pointer;font-size:17px;color:var(--text)}
+
+/* ══ BUTTONS ══ */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:9px 18px;border-radius:30px;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(108,99,255,.3)}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-secondary{background:var(--primary-light);color:var(--primary)}
+.btn-secondary:hover{background:#dddaff}
+.btn-danger{background:#FFF0F0;color:var(--secondary)}
+.btn-danger:hover{background:var(--secondary);color:#fff}
+.btn-teal{background:#E0FAF8;color:var(--teal)}
+.btn-teal:hover{background:var(--teal);color:#fff}
+.btn-sm{padding:6px 13px;font-size:12px}
+
+/* ══ CONTENT ══ */
+.content{flex:1;padding:26px 28px}
+
+/* ══ REGISTER BANNER ══ */
+.register-banner{background:linear-gradient(135deg,var(--primary) 0%,#A78BFA 100%);border-radius:var(--radius);padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:0 6px 24px rgba(108,99,255,.28);flex-wrap:wrap}
+.rb-text .rb-title{font-size:16px;font-weight:900;color:#fff;margin-bottom:2px}
+.rb-text .rb-sub{font-size:12px;color:rgba(255,255,255,.8)}
+.rb-btn{background:#fff;color:var(--primary);border-radius:30px;padding:10px 20px;font-size:13px;font-weight:800;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.12);text-decoration:none;flex-shrink:0}
+.rb-btn:hover{transform:translateY(-2px)}
+
+/* ══ STATS ══ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:20px;border:2px solid var(--border);box-shadow:var(--shadow);transition:all .2s;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.cp::before{background:linear-gradient(90deg,#6C63FF,#A78BFA)}
+.stat-card.ct::before{background:linear-gradient(90deg,#4ECDC4,#06D6A0)}
+.stat-card.cc::before{background:linear-gradient(90deg,#FF6B6B,#FF9A3C)}
+.stat-card.cy::before{background:linear-gradient(90deg,#FFD93D,#FF9A3C)}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.stat-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.si-p{background:var(--primary-light)} .si-t{background:#E0FAF8} .si-c{background:#FFF0F0} .si-y{background:#FFFBE6}
+.stat-num{font-size:28px;font-weight:900;color:var(--text);line-height:1;margin-bottom:3px}
+.stat-lbl{font-size:12px;color:var(--text-muted);font-weight:600}
+.stat-trend{font-size:11px;margin-top:7px;font-weight:700}
+.up{color:var(--green)} .warn{color:var(--orange)}
+
+/* ══ TOOLBAR ══ */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-btn{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;border:2px solid var(--border);background:none;color:var(--text-muted);font-family:'Nunito',sans-serif}
+.filter-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* ══ STUDENT GRID ══ */
+.student-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+
+/* ══ STUDENT CARD — Version A colourful UI ══ */
+.student-card{background:var(--card);border-radius:var(--radius);border:2px solid var(--border);box-shadow:var(--shadow);transition:all .22s;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.student-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px}
+.sc-0::before{background:linear-gradient(90deg,#6C63FF,#A78BFA)}
+.sc-1::before{background:linear-gradient(90deg,#FF6B6B,#FF9A3C)}
+.sc-2::before{background:linear-gradient(90deg,#4ECDC4,#06D6A0)}
+.sc-3::before{background:linear-gradient(90deg,#FFD93D,#FF9A3C)}
+.sc-4::before{background:linear-gradient(90deg,#FF6B9D,#C147E9)}
+.student-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover);border-color:var(--primary)}
+.card-body{padding:20px}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.card-avatar{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(135deg,var(--primary-light),#dddaff)}
+.card-status{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px}
+.cs-a{background:#ECFDF5;color:#059669} .cs-h{background:#FFFBE6;color:#B45309} .cs-d{background:#FFF0F0;color:#DC2626}
+.card-name{font-size:16px;font-weight:900;color:var(--text);margin-bottom:3px}
+.card-meta{font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:9px}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+.ctag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary)}
+.pay-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px}
+.pp{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}
+.pn{background:#FFF0F0;color:#DC2626;border:1px solid #FECACA}
+.pr{background:#FFFBE6;color:#B45309;border:1px solid #FDE68A}
+.att-row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.att-lbl{font-size:11px;font-weight:700;color:var(--text-muted);min-width:60px}
+.att-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.att-fill{height:100%;border-radius:3px;transition:width .5s}
+.att-pct{font-size:11px;font-weight:800;color:var(--text);min-width:30px;text-align:right}
+.mark-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);padding:4px 9px;font-size:11px;font-weight:700;color:var(--text-muted);margin-top:8px;margin-right:6px}
+.mark-chip span{color:var(--primary);font-weight:900}
+
+/* ══ SAVED LINKS SECTION ══ */
+.links-section{padding:13px 18px;background:var(--bg);border-top:1px solid var(--border)}
+.links-title{font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px}
+.saved-link-item{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:7px 9px;margin-bottom:6px;transition:all .18s}
+.saved-link-item:hover{border-color:var(--primary);background:var(--primary-light)}
+.sli-icon{font-size:13px;flex-shrink:0}
+.sli-text{font-size:12px;font-weight:700;color:var(--primary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.sli-text:hover{text-decoration:underline}
+.sli-del{background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-muted);flex-shrink:0;padding:1px;transition:color .15s}
+.sli-del:hover{color:var(--secondary)}
+.no-links-msg{font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:8px}
+.link-input-row{display:flex;gap:7px}
+.link-input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 11px;font-size:12px;font-family:'Nunito Sans',sans-serif;color:var(--text);background:#fff;outline:none;transition:all .18s}
+.link-input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(108,99,255,.10)}
+.link-save-btn{background:var(--primary);color:#fff;border:none;border-radius:var(--radius-xs);padding:8px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .18s;flex-shrink:0}
+.link-save-btn:hover{background:var(--primary-dark)}
+
+/* ══ CARD ACTIONS ══ */
+.card-actions{padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
+.ca-group{display:flex;gap:6px}
+.ca-btn{width:31px;height:31px;border-radius:8px;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.ca-btn:hover{transform:scale(1.12)}
+.ca-wa{background:#E8FBF5;color:#059669}
+.ca-wa:hover{background:var(--green);color:#fff}
+.ca-edit{background:var(--primary-light);color:var(--primary)}
+.ca-edit:hover{background:var(--primary);color:#fff}
+.ca-del{background:#FFF0F0;color:var(--secondary)}
+.ca-del:hover{background:var(--secondary);color:#fff}
+
+/* ══ TUTOR UPI PAYMENT PANEL ══ */
+/* This shows TUTOR's own UPI — not the seller's */
+.tutor-upi-panel{background:linear-gradient(135deg,#0A0A2E,#1a1060);border-radius:var(--radius);padding:20px;margin-bottom:22px;border:1px solid rgba(255,255,255,.08)}
+.tup-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.tup-sub{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:14px;font-weight:600}
+.tup-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tup-upi-box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius-sm);padding:9px 14px;flex:1;min-width:180px}
+.tup-upi-text{font-size:13px;font-weight:800;color:#A78BFA;flex:1;word-break:break-all}
+.tup-copy{background:var(--primary);color:#fff;border:none;border-radius:6px;padding:5px 11px;font-size:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;flex-shrink:0}
+.tup-methods{display:flex;gap:7px;flex-wrap:wrap}
+.tup-method{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:6px 11px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
+.tup-note{font-size:11px;color:rgba(255,255,255,.4);margin-top:10px;line-height:1.5}
+
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(30,20,80,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(5px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:22px;width:100%;max-width:620px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(108,99,255,.24);transform:scale(.96) translateY(18px);transition:transform .28s}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-header{padding:20px 24px 15px;border-bottom:2px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:5}
+.modal-title{font-size:18px;font-weight:900;color:var(--text)}
+.modal-close{width:32px;height:32px;border-radius:8px;border:2px solid var(--border);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .18s;color:var(--text-muted)}
+.modal-close:hover{background:var(--secondary);color:#fff;border-color:var(--secondary)}
+.modal-body{padding:20px 24px}
+.modal-footer{padding:12px 24px 20px;border-top:2px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.form-section-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--primary);margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.form-section-title::after{content:'';flex:1;height:2px;background:var(--primary-light)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{font-family:'Nunito Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;outline:none;transition:all .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,.10)}
+textarea{resize:vertical;min-height:68px}
+.checkbox-group{display:flex;flex-wrap:wrap;gap:7px}
+.checkbox-item{display:flex;align-items:center;gap:5px;cursor:pointer}
+.checkbox-item input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--primary)}
+.checkbox-item span{font-size:12px;font-weight:600;color:var(--text)}
+
+/* ══ SETTINGS MODAL ══ */
+.settings-field{margin-bottom:14px}
+.settings-label{font-size:12px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:block}
+.settings-input{width:100%;border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 13px;font-size:13px;font-family:'Nunito Sans',sans-serif;color:var(--text);background:var(--bg);outline:none;transition:all .2s}
+.settings-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,.10)}
+.settings-hint{font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:500}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:56px 24px;color:var(--text-muted);grid-column:1/-1}
+.ei{font-size:48px;margin-bottom:12px}
+.et{font-size:17px;font-weight:800;color:var(--text);margin-bottom:5px}
+.es{font-size:13px;margin-bottom:18px}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--text);color:#fff;padding:12px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;z-index:9998;transform:translateY(60px);opacity:0;transition:all .3s;font-family:'Nunito',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:220px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{background:#059669}
+.toast.err{background:var(--secondary)}
+.toast.info{background:var(--primary)}
+
+/* FOOTER */
+.page-footer{padding:16px 28px;border-top:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.pf-brand{font-size:13px;font-weight:700;color:var(--text-muted)}
+.pf-secure{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-muted)}
+.pf-badge{background:#ECFDF5;border:1px solid #A7F3D0;color:#059669;font-size:11px;font-weight:800;padding:3px 9px;border-radius:6px}
+
+/* OVERLAY */
+.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+.overlay-bg.show{display:block}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}.hamburger{display:flex}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .search-wrap{display:none}
+}
+@media(max-width:600px){
+  .stats-row{grid-template-columns:1fr}.content{padding:16px}
+  .topbar{padding:0 14px}.form-grid{grid-template-columns:1fr}
+  .toolbar{flex-direction:column;align-items:flex-start}
+}
 </style>
 </head>
 <body>
-<div class="card reg-card">
-  <h3 style="margin:0;">📋 Register a New Student</h3>
-  <a href="https://forms.google.com" class="btn-reg">Register New Student →</a>
+
+<!-- ══════════════════════════════════════════════
+     FIRST-TIME SETUP SCREEN
+     Shows ONCE when tutor first opens the file.
+     Tutor enters HER OWN name + HER OWN UPI here.
+     After saving, this screen never shows again.
+     Your (seller) UPI is ONLY on index.html.
+══════════════════════════════════════════════ -->
+<div class="setup-overlay" id="setupOverlay">
+  <div class="setup-dots"></div>
+  <div class="setup-card">
+    <div class="setup-head">
+      <div class="setup-emoji">🎓</div>
+      <div class="setup-title">Welcome to Your Dashboard!</div>
+      <div class="setup-subtitle">This is your private dashboard. Set it up once — takes 1 minute. Your data stays on your device only.</div>
+    </div>
+    <div class="setup-body">
+      <div class="setup-notice">
+        <div class="setup-notice-text">✅ This is YOUR dashboard. Parents will pay fees directly to YOUR UPI below. Nobody else can see your income or your students.</div>
+      </div>
+      <div class="setup-field">
+        <label class="setup-label">Your Name (shown on dashboard)</label>
+        <input type="text" class="setup-input" id="setupName" placeholder="e.g. Mrs. Priya Sharma">
+        <div class="setup-hint">This appears as your tutor name on the dashboard</div>
+      </div>
+      <div class="setup-field">
+        <label class="setup-label">Your UPI ID (parents pay fees here)</label>
+        <input type="text" class="setup-input" id="setupUPI" placeholder="e.g. 9876543210@gpay or name@upi">
+        <div class="setup-hint">📌 Parents pay their monthly fees directly to this UPI. This is your personal income — 100% private, 0% commission.</div>
+      </div>
+      <div class="setup-field">
+        <label class="setup-label">Your WhatsApp Number</label>
+        <input type="tel" class="setup-input" id="setupWA" placeholder="e.g. 9876543210" inputmode="numeric" maxlength="10">
+        <div class="setup-hint">Used for receiving payment screenshots from parents</div>
+      </div>
+      <button class="setup-submit" onclick="completeSetup()">🚀 Launch My Dashboard</button>
+      <div class="setup-secure">🔒 All data stays on your device only · Never shared</div>
+    </div>
+  </div>
 </div>
-<div class="stat-grid">
-  <div class="stat-box"><span class="stat-val">3</span><span class="stat-label">Total Students</span></div>
-  <div class="stat-box" style="border-color:#FF6B6B;"><span class="stat-val">1</span><span class="stat-label">Fees Pending</span></div>
+
+<!-- ══ MAIN APP ══ -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-area">
+      <div class="logo-icon">🎓</div>
+      <div>
+        <div class="logo-text">TutorBuddy</div>
+        <div class="logo-sub">Pro Hub · Dashboard</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" onclick="setNav(this)"><span class="ni">🏠</span>Dashboard</button>
+      <button class="nav-item" onclick="setNav(this)"><span class="ni">👦</span>Students<span class="nav-badge" id="nb-count">0</span></button>
+      <button class="nav-item" onclick="setNav(this)"><span class="ni">📅</span>Attendance</button>
+      <button class="nav-item" onclick="setNav(this)"><span class="ni">💰</span>Fees<span class="nav-badge" id="nb-dues" style="display:none">!</span></button>
+      <button class="nav-item" onclick="setNav(this)"><span class="ni">📊</span>Performance</button>
+      <button class="nav-item" onclick="setNav(this)"><span class="ni">🗒️</span>Notes</button>
+      <div style="margin:8px 0;border-top:1px solid var(--border)"></div>
+      <button class="nav-item" onclick="openSettings()"><span class="ni">⚙️</span>My Settings</button>
+      <a href="index.html" class="nav-item"><span class="ni">🌐</span>Landing Page</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="tutor-profile-card" id="tutorProfileCard">
+        <div class="tpc-avatar">👩‍🏫</div>
+        <div class="tpc-name" id="tutorDisplayName">My Tutor Dashboard</div>
+        <div class="tpc-upi" id="tutorDisplayUPI">UPI not set</div>
+        <button class="tpc-edit" onclick="openSettings()">⚙️ Edit My Settings</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub" id="topbarTutorName">TutorBuddy Pro Hub</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-wrap">
+          <span style="color:var(--text-muted)">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search students..." oninput="handleSearch(this.value)">
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="exportCSV()">⬇️ CSV</button>
+        <button class="btn btn-sm btn-secondary" onclick="backupData()">💾 Backup</button>
+        <label class="btn btn-sm btn-secondary" style="cursor:pointer">📂 Restore<input type="file" accept=".json" onchange="restoreData(this)" style="display:none"></label>
+        <button class="btn btn-primary btn-sm" onclick="openAddStudent()">＋ Add Student</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- REGISTER BANNER -->
+      <div class="register-banner">
+        <div class="rb-text">
+          <div class="rb-title">📋 Register a New Student</div>
+          <div class="rb-sub">Send parents the registration form link so they can sign up their child</div>
+        </div>
+        <a href="register.html" target="_blank" class="rb-btn">📋 Open Registration Form →</a>
+      </div>
+
+      <!-- TUTOR'S OWN UPI PANEL — parents pay HERE -->
+      <div class="tutor-upi-panel" id="tutorUPIPanel">
+        <div class="tup-title">💰 Your Fee Collection UPI — Parents Pay Here</div>
+        <div class="tup-sub">Share this UPI with parents for monthly fee payment. This is YOUR income — direct to you, zero commission.</div>
+        <div class="tup-row">
+          <div class="tup-upi-box">
+            <span class="tup-upi-text" id="tutorUPIDisplay">Set your UPI in Settings →</span>
+            <button class="tup-copy" onclick="copyTutorUPI()" id="tutorCopyBtn" style="display:none">Copy</button>
+          </div>
+          <div class="tup-methods">
+            <div class="tup-method">📱 GPay</div>
+            <div class="tup-method">📲 PhonePe</div>
+            <div class="tup-method">🏦 UPI</div>
+          </div>
+        </div>
+        <div class="tup-note">📌 Parents scan/copy this UPI and pay monthly fees directly to you. No middleman. No commission. Ever.</div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row" id="statsRow"></div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button class="filter-btn active" onclick="applyFilter('',this)">All</button>
+          <button class="filter-btn" onclick="applyFilter('Active',this)">🟢 Active</button>
+          <button class="filter-btn" onclick="applyFilter('On Hold',this)">🟡 On Hold</button>
+          <button class="filter-btn" onclick="applyFilter('Discontinued',this)">🔴 Discontinued</button>
+          <select id="filterBoard" onchange="renderCards()" style="padding:7px 12px;border-radius:20px;font-size:12px;font-family:'Nunito',sans-serif;font-weight:700;border:2px solid var(--border);background:none;color:var(--text-muted);cursor:pointer;outline:none">
+            <option value="">All Boards</option>
+            <option>CBSE</option><option>ICSE</option><option>State</option><option>IB</option><option>IGCSE</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openAddStudent()">＋ Add Student</button>
+      </div>
+
+      <!-- STUDENT CARDS -->
+      <div class="student-grid" id="studentGrid"></div>
+
+    </div><!-- /content -->
+
+    <footer class="page-footer">
+      <div class="pf-brand">🎓 TutorBuddy Pro Hub · <span id="footerName">My Dashboard</span></div>
+      <div class="pf-secure"><span class="pf-badge">🔒 ENCRYPTED</span>Secure Platform · Data encrypted · Tutor use only</div>
+    </footer>
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ADD/EDIT STUDENT MODAL -->
+<div class="modal-overlay" id="studentModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">➕ Add New Student</div>
+      <button class="modal-close" onclick="closeModal('studentModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">👦 Child Details</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="s-name" placeholder="e.g. Arjun Mehta"></div>
+        <div class="form-group"><label>Date of Birth</label><input type="date" id="s-dob"></div>
+        <div class="form-group"><label>Avatar</label>
+          <select id="s-avatar"><option value="👦">👦 Boy</option><option value="👧">👧 Girl</option><option value="🧒">🧒 Child</option><option value="🌟">🌟 Star</option><option value="🦁">🦁 Lion</option><option value="🐯">🐯 Tiger</option><option value="🦋">🦋 Butterfly</option><option value="🌈">🌈 Rainbow</option><option value="🚀">🚀 Rocket</option></select>
+        </div>
+        <div class="form-group"><label>Status</label>
+          <select id="s-status"><option>Active</option><option>On Hold</option><option>Discontinued</option></select>
+        </div>
+        <div class="form-group"><label>School Name</label><input type="text" id="s-school" placeholder="e.g. Delhi Public School"></div>
+        <div class="form-group"><label>Board</label>
+          <select id="s-board"><option value="">Select</option><option>CBSE</option><option>ICSE</option><option>State</option><option>IB</option><option>IGCSE</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label>Grade / Class</label>
+          <select id="s-grade"><option value="">Select</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option></select>
+        </div>
+        <div class="form-group"><label>Monthly Fee (₹)</label><input type="number" id="s-fee" placeholder="e.g. 2000"></div>
+        <div class="form-group"><label>Attendance %</label><input type="number" id="s-att" placeholder="e.g. 88" min="0" max="100"></div>
+        <div class="form-group"><label>Latest Marks %</label><input type="number" id="s-marks" placeholder="e.g. 85" min="0" max="100"></div>
+        <div class="form-group"><label>Payment Status</label>
+          <select id="s-pay"><option value="Paid">✅ Paid</option><option value="Pending">⏳ Pending</option><option value="Partial">⚡ Partial</option></select>
+        </div>
+        <div class="form-group"><label>Enrollment Date</label><input type="date" id="s-enroll"></div>
+        <div class="form-group full"><label>Subjects</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" value="Maths"><span>📐 Maths</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Science"><span>🔬 Science</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="English"><span>📖 English</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Hindi"><span>🇮🇳 Hindi</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Social Studies"><span>🌍 SST</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Computers"><span>💻 Computers</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="EVS"><span>🌿 EVS</span></label>
+            <label class="checkbox-item"><input type="checkbox" value="Drawing"><span>🎨 Drawing</span></label>
+          </div>
+        </div>
+        <div class="form-group"><label>Parent Name</label><input type="text" id="s-parent" placeholder="e.g. Priya Mehta"></div>
+        <div class="form-group"><label>WhatsApp No.</label><input type="tel" id="s-wa" placeholder="91XXXXXXXXXX"></div>
+        <div class="form-group full"><label>Notes</label><textarea id="s-notes" placeholder="Special needs, notes, etc."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('studentModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStudent()">💾 Save Student</button>
+    </div>
+  </div>
 </div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ My Settings</div>
+      <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--primary-light);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;border-left:4px solid var(--primary);font-size:13px;color:var(--primary);font-weight:700;line-height:1.6">
+        🔒 These are YOUR private settings. Parents pay fees to YOUR UPI below. This has nothing to do with the app seller.
+      </div>
+      <div class="settings-field">
+        <label class="settings-label">Your Tutor Name</label>
+        <input type="text" class="settings-input" id="settingsName" placeholder="e.g. Mrs. Priya Sharma">
+      </div>
+      <div class="settings-field">
+        <label class="settings-label">Your UPI ID (Parents pay fees here)</label>
+        <input type="text" class="settings-input" id="settingsUPI" placeholder="e.g. 9876543210@gpay">
+        <div class="settings-hint">📌 Parents pay monthly fees directly to this UPI. Your income — 100% private.</div>
+      </div>
+      <div class="settings-field">
+        <label class="settings-label">Your WhatsApp Number</label>
+        <input type="tel" class="settings-input" id="settingsWA" placeholder="9876543210" inputmode="numeric" maxlength="10">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('settingsModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   DATA & STORAGE
+══════════════════════════════════════ */
+let db = { students:[], links:{} };
+let tutor = { name:'', upi:'', wa:'' };
+let editStudentId = null;
+let activeFilter  = '';
+let searchQuery   = '';
+
+function saveDB()    { try{localStorage.setItem('tbph_db',    JSON.stringify(db));}    catch(e){} }
+function saveTutor() { try{localStorage.setItem('tbph_tutor', JSON.stringify(tutor));} catch(e){} }
+function loadAll() {
+  const rawDB    = localStorage.getItem('tbph_db');
+  const rawTutor = localStorage.getItem('tbph_tutor');
+  if(rawDB)    { try{db    = {...db,    ...JSON.parse(rawDB)};   }catch(e){} }
+  if(rawTutor) { try{tutor = {...tutor, ...JSON.parse(rawTutor)};}catch(e){} }
+}
+function genId() { return '_'+Math.random().toString(36).substr(2,9); }
+
+/* ══ SETUP ══ */
+function checkSetup() {
+  const done = localStorage.getItem('tbph_setup_done');
+  if(done) {
+    document.getElementById('setupOverlay').classList.add('gone');
+    updateTutorUI();
+  }
+  // Else overlay stays visible
+}
+
+function completeSetup() {
+  const name = document.getElementById('setupName').value.trim();
+  const upi  = document.getElementById('setupUPI').value.trim();
+  const wa   = document.getElementById('setupWA').value.trim();
+  if(!name) { showToast('Please enter your name','err'); return; }
+  if(!upi)  { showToast('Please enter your UPI ID','err'); return; }
+  tutor = { name, upi, wa };
+  saveTutor();
+  localStorage.setItem('tbph_setup_done','1');
+  document.getElementById('setupOverlay').classList.add('gone');
+  updateTutorUI();
+  showToast('Dashboard ready! Welcome, '+name+' 🎉','ok');
+  refresh();
+}
+
+function updateTutorUI() {
+  if(!tutor.name) return;
+  document.getElementById('tutorDisplayName').textContent = tutor.name;
+  document.getElementById('tutorDisplayUPI').textContent  = tutor.upi || 'UPI not set';
+  document.getElementById('topbarTutorName').textContent  = tutor.name + "'s Dashboard";
+  document.getElementById('footerName').textContent       = tutor.name;
+  if(tutor.upi) {
+    document.getElementById('tutorUPIDisplay').textContent = tutor.upi;
+    document.getElementById('tutorCopyBtn').style.display  = 'inline-block';
+  } else {
+    document.getElementById('tutorUPIDisplay').textContent = 'Not set — go to Settings ⚙️';
+  }
+}
+
+function openSettings() {
+  document.getElementById('settingsName').value = tutor.name || '';
+  document.getElementById('settingsUPI').value  = tutor.upi  || '';
+  document.getElementById('settingsWA').value   = tutor.wa   || '';
+  openModal('settingsModal');
+}
+
+function saveSettings() {
+  const name = document.getElementById('settingsName').value.trim();
+  const upi  = document.getElementById('settingsUPI').value.trim();
+  const wa   = document.getElementById('settingsWA').value.trim();
+  if(!name){ showToast('Please enter your name','err'); return; }
+  if(!upi) { showToast('Please enter your UPI ID','err'); return; }
+  tutor = { name, upi, wa };
+  saveTutor();
+  closeModal('settingsModal');
+  updateTutorUI();
+  showToast('Settings saved!','ok');
+}
+
+function copyTutorUPI() {
+  if(!tutor.upi){ showToast('No UPI set — go to Settings','err'); return; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(tutor.upi); }
+  else{ const el=document.createElement('textarea');el.value=tutor.upi;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el); }
+  showToast('Your UPI ID copied! ✅','ok');
+}
+
+/* ══ NAV ══ */
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlayBg').classList.toggle('show'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlayBg').classList.remove('show'); }
+function setNav(el) { document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); closeSidebar(); }
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); if(id==='studentModal') editStudentId=null; }
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+function showToast(msg, type='ok') {
+  const t=document.getElementById('toast');
+  t.textContent=(type==='ok'?'✅ ':type==='err'?'❌ ':'ℹ️ ')+msg;
+  t.className=`toast show ${type}`;
+  setTimeout(()=>t.className='toast',2800);
+}
+
+/* ══ HELPERS ══ */
+function calcAge(dob){ if(!dob)return'—'; const b=new Date(dob),n=new Date(); let a=n.getFullYear()-b.getFullYear(); if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--; return a; }
+function getAttColor(p){ return p>=80?'#06D6A0':p>=60?'#FFD93D':'#FF6B6B'; }
+function payClass(p){ return p==='Paid'?'pp':p==='Pending'?'pn':'pr'; }
+function payIcon(p){ return p==='Paid'?'✅':p==='Pending'?'⏳':'⚡'; }
+function statusClass(s){ return s==='Active'?'cs-a':s==='On Hold'?'cs-h':'cs-d'; }
+
+/* ══ STATS ══ */
+function renderStats() {
+  const total   = db.students.length;
+  const active  = db.students.filter(s=>s.status==='Active').length;
+  const paid    = db.students.filter(s=>s.pay==='Paid').length;
+  const pending = db.students.filter(s=>s.pay==='Pending').length;
+  document.getElementById('nb-count').textContent = total;
+  const nd=document.getElementById('nb-dues');
+  pending>0?(nd.style.display='inline',nd.textContent=pending):nd.style.display='none';
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card cp"><div class="stat-icon si-p">👥</div><div class="stat-num">${total}</div><div class="stat-lbl">Total Students</div><div class="stat-trend up">↑ All enrolled</div></div>
+    <div class="stat-card ct"><div class="stat-icon si-t">⚡</div><div class="stat-num">${active}</div><div class="stat-lbl">Active Sessions</div><div class="stat-trend up">↑ ${total>0?Math.round(active/total*100):0}% of total</div></div>
+    <div class="stat-card cc"><div class="stat-icon si-c">💳</div><div class="stat-num">${paid}</div><div class="stat-lbl">Payment Status</div><div class="stat-trend up">↑ ${total>0?Math.round(paid/total*100):0}% paid</div></div>
+    <div class="stat-card cy"><div class="stat-icon si-y">⚠️</div><div class="stat-num">${pending}</div><div class="stat-lbl">Fees Pending</div><div class="stat-trend ${pending>0?'warn':'up'}">${pending>0?'⚠ Follow up':'✓ All clear'}</div></div>`;
+}
+
+/* ══ CARDS ══ */
+function applyFilter(f,btn){ activeFilter=f; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderCards(); }
+function handleSearch(v){ searchQuery=v.toLowerCase(); renderCards(); }
+
+function renderCards() {
+  const board = document.getElementById('filterBoard').value;
+  let list = db.students.filter(s => {
+    if(activeFilter && s.status!==activeFilter) return false;
+    if(board && s.board!==board) return false;
+    if(searchQuery) return (s.name||'').toLowerCase().includes(searchQuery)||(s.school||'').toLowerCase().includes(searchQuery)||(s.parent||'').toLowerCase().includes(searchQuery);
+    return true;
+  });
+  const grid = document.getElementById('studentGrid');
+  if(list.length===0){
+    grid.innerHTML=`<div class="empty-state"><div class="ei">👦</div><div class="et">No students yet</div><div class="es">Add your first student to get started.</div><button class="btn btn-primary" onclick="openAddStudent()">＋ Add Student</button></div>`;
+    return;
+  }
+  grid.innerHTML = list.map((s,i) => {
+    const age    = calcAge(s.dob);
+    const att    = parseInt(s.att)||0;
+    const marks  = parseInt(s.marks)||0;
+    const attCol = getAttColor(att);
+    const tags   = (s.subjects||[]).slice(0,3).map(sub=>`<span class="ctag">${sub}</span>`).join('');
+    const links  = db.links[s.id]||[];
+    // WhatsApp uses TUTOR's info for parent communication
+    const waNum  = (s.wa||'').replace(/\D/g,'');
+    const waMsg  = encodeURIComponent(`Hi! Progress update for ${s.name} from ${tutor.name||'TutorBuddy Pro Hub'}.\n\nAttendance: ${att}%\nMarks: ${marks}%\nFee Status: ${s.pay}\n\nPlease pay fees to UPI: ${tutor.upi||'—'}`);
+    const waHref = waNum?`https://wa.me/${waNum}?text=${waMsg}`:'#';
+
+    const linksList = links.length>0
+      ? links.map(lk=>`<div class="saved-link-item"><span class="sli-icon">🔗</span><span class="sli-text" onclick="window.open('${lk.url}','_blank')" title="${lk.url}">${lk.label||lk.url}</span><button class="sli-del" onclick="deleteLink('${s.id}','${lk.id}')">✕</button></div>`).join('')
+      : `<div class="no-links-msg">No links yet — paste a URL below</div>`;
+
+    return `
+    <div class="student-card sc-${i%5}" id="card-${s.id}">
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-avatar">${s.avatar||'👦'}</div>
+          <span class="card-status ${statusClass(s.status)}">${s.status==='Active'?'🟢':s.status==='On Hold'?'🟡':'🔴'} ${s.status}</span>
+        </div>
+        <div class="card-name">${s.name}</div>
+        <div class="card-meta">Age ${age} · ${s.grade||'—'} · ${s.board||'—'} · ${s.school||'—'}</div>
+        <div class="card-tags">${tags}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="pay-badge ${payClass(s.pay)}">${payIcon(s.pay)} ${s.pay}</span>
+          ${s.fee?`<span style="font-size:12px;color:var(--text-muted);font-weight:700">₹${s.fee}/mo</span>`:''}
+        </div>
+        <div class="att-row">
+          <span class="att-lbl">Attendance</span>
+          <div class="att-bar"><div class="att-fill" style="width:${att}%;background:${attCol}"></div></div>
+          <span class="att-pct">${att}%</span>
+        </div>
+        ${marks>0?`<span class="mark-chip">📊 Marks: <span>${marks}%</span></span>`:''}
+        ${s.parent?`<div style="font-size:11px;color:var(--text-muted);font-weight:600;margin-top:8px">👨‍👩‍👧 ${s.parent}</div>`:''}
+        ${s.notes?`<div style="font-size:11px;color:var(--text-muted);font-style:italic;margin-top:6px;padding:7px 10px;background:var(--bg);border-radius:var(--radius-xs)">📝 ${s.notes}</div>`:''}
+      </div>
+      <div class="links-section">
+        <div class="links-title">🔗 Saved Resource Links</div>
+        <div id="links-${s.id}">${linksList}</div>
+        <div class="link-input-row">
+          <input type="url" class="link-input" id="linkinput-${s.id}" placeholder="Paste worksheet / video URL here…" onkeydown="if(event.key==='Enter')saveLink('${s.id}')">
+          <button class="link-save-btn" onclick="saveLink('${s.id}')">Save</button>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span style="font-size:11px;color:var(--text-muted);font-weight:600">${links.length} link${links.length!==1?'s':''} saved</span>
+        <div class="ca-group">
+          <a href="${waHref}" target="_blank"><button class="ca-btn ca-wa" title="WhatsApp Parent">💬</button></a>
+          <button class="ca-btn ca-edit" title="Edit" onclick="openEditStudent('${s.id}')">✏️</button>
+          <button class="ca-btn ca-del" title="Delete" onclick="deleteStudent('${s.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══ LINKS ══ */
+function saveLink(sid) {
+  const input = document.getElementById('linkinput-'+sid);
+  let url = input.value.trim();
+  if(!url){ showToast('Please paste a URL first','err'); return; }
+  if(!url.startsWith('http://') && !url.startsWith('https://')) url='https://'+url;
+  if(!db.links[sid]) db.links[sid]=[];
+  let label=url;
+  try{ const u=new URL(url); label=u.hostname.replace('www.','')+u.pathname; if(label.length>48)label=label.substring(0,48)+'…'; }catch(e){}
+  db.links[sid].push({ id:genId(), url, label });
+  saveDB(); input.value='';
+  refreshLinksFor(sid);
+  showToast('Link saved! 🔗','ok');
+}
+
+function deleteLink(sid,lid) {
+  if(!db.links[sid]) return;
+  db.links[sid]=db.links[sid].filter(l=>l.id!==lid);
+  saveDB(); refreshLinksFor(sid);
+  showToast('Link removed');
+}
+
+function refreshLinksFor(sid) {
+  const el=document.getElementById('links-'+sid); if(!el) return;
+  const links=db.links[sid]||[];
+  el.innerHTML=links.length>0
+    ? links.map(lk=>`<div class="saved-link-item"><span class="sli-icon">🔗</span><span class="sli-text" onclick="window.open('${lk.url}','_blank')" title="${lk.url}">${lk.label||lk.url}</span><button class="sli-del" onclick="deleteLink('${sid}','${lk.id}')">✕</button></div>`).join('')
+    : '<div class="no-links-msg">No links yet — paste a URL below</div>';
+  const card=document.getElementById('card-'+sid);
+  if(card){ const c=card.querySelector('.card-actions span'); if(c)c.textContent=links.length+' link'+(links.length!==1?'s':'')+' saved'; }
+}
+
+/* ══ STUDENT CRUD ══ */
+function openAddStudent() {
+  editStudentId=null;
+  document.getElementById('modalTitle').textContent='➕ Add New Student';
+  clearForm();
+  document.getElementById('s-enroll').value=new Date().toISOString().split('T')[0];
+  openModal('studentModal');
+}
+
+function openEditStudent(id) {
+  const s=db.students.find(x=>x.id===id); if(!s) return;
+  editStudentId=id;
+  document.getElementById('modalTitle').textContent='✏️ Edit Student';
+  document.getElementById('s-name').value   = s.name||'';
+  document.getElementById('s-dob').value    = s.dob||'';
+  document.getElementById('s-avatar').value = s.avatar||'👦';
+  document.getElementById('s-status').value = s.status||'Active';
+  document.getElementById('s-school').value = s.school||'';
+  document.getElementById('s-board').value  = s.board||'';
+  document.getElementById('s-grade').value  = s.grade||'';
+  document.getElementById('s-fee').value    = s.fee||'';
+  document.getElementById('s-att').value    = s.att||'';
+  document.getElementById('s-marks').value  = s.marks||'';
+  document.getElementById('s-pay').value    = s.pay||'Pending';
+  document.getElementById('s-enroll').value = s.enroll||'';
+  document.getElementById('s-parent').value = s.parent||'';
+  document.getElementById('s-wa').value     = s.wa||'';
+  document.getElementById('s-notes').value  = s.notes||'';
+  document.querySelectorAll('#studentModal input[type=checkbox]').forEach(cb=>{ cb.checked=(s.subjects||[]).includes(cb.value); });
+  openModal('studentModal');
+}
+
+function clearForm() {
+  ['s-name','s-dob','s-enroll','s-school','s-fee','s-att','s-marks','s-parent','s-wa','s-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('s-avatar').value='👦';
+  document.getElementById('s-status').value='Active';
+  document.getElementById('s-board').value='';
+  document.getElementById('s-grade').value='';
+  document.getElementById('s-pay').value='Pending';
+  document.querySelectorAll('#studentModal input[type=checkbox]').forEach(cb=>cb.checked=false);
+}
+
+function saveStudent() {
+  const name=document.getElementById('s-name').value.trim();
+  if(!name){ showToast('Student name is required','err'); return; }
+  const subjects=Array.from(document.querySelectorAll('#studentModal input[type=checkbox]:checked')).map(c=>c.value);
+  const data={
+    name, dob:document.getElementById('s-dob').value,
+    avatar:document.getElementById('s-avatar').value,
+    status:document.getElementById('s-status').value,
+    school:document.getElementById('s-school').value,
+    board:document.getElementById('s-board').value,
+    grade:document.getElementById('s-grade').value,
+    fee:parseFloat(document.getElementById('s-fee').value)||0,
+    att:parseInt(document.getElementById('s-att').value)||0,
+    marks:parseInt(document.getElementById('s-marks').value)||0,
+    pay:document.getElementById('s-pay').value,
+    enroll:document.getElementById('s-enroll').value,
+    subjects,
+    parent:document.getElementById('s-parent').value,
+    wa:document.getElementById('s-wa').value,
+    notes:document.getElementById('s-notes').value
+  };
+  if(editStudentId){ const idx=db.students.findIndex(s=>s.id===editStudentId); if(idx>=0)db.students[idx]={...db.students[idx],...data}; showToast('Student updated!','ok'); }
+  else{ db.students.push({id:genId(),...data}); showToast('Student added! 🎉','ok'); }
+  saveDB(); closeModal('studentModal'); refresh();
+}
+
+function deleteStudent(id) {
+  const s=db.students.find(x=>x.id===id);
+  if(!s||!confirm(`Delete "${s.name}"?`)) return;
+  db.students=db.students.filter(x=>x.id!==id);
+  delete db.links[id];
+  saveDB(); refresh();
+  showToast('Student removed');
+}
+
+/* ══ EXPORT ══ */
+function exportCSV() {
+  const headers=['Name','DOB','Age','School','Board','Grade','Subjects','Parent','WA','Att%','Marks%','Fee','Payment','Status','Enrolled','Notes'];
+  const rows=db.students.map(s=>[s.name,s.dob,calcAge(s.dob),s.school,s.board,s.grade,(s.subjects||[]).join('; '),s.parent,s.wa,s.att,s.marks,s.fee,s.pay,s.status,s.enroll,s.notes]);
+  const csv=[headers,...rows].map(r=>r.map(c=>`"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`tutorbuddy_${(tutor.name||'students').replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click(); showToast('CSV exported!','ok');
+}
+
+function backupData() {
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify({db,tutor},null,2));
+  a.download=`tutorbuddy_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click(); showToast('Backup saved!','ok');
+}
+
+function restoreData(input) {
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const parsed=JSON.parse(e.target.result);
+      if(parsed.db) db=parsed.db;
+      if(parsed.tutor) tutor=parsed.tutor;
+      saveDB(); saveTutor();
+      updateTutorUI(); refresh();
+      showToast('Data restored! 🎉','ok');
+    }catch{ showToast('Invalid backup file','err'); }
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
+/* ══ REFRESH ALL ══ */
+function refresh() { renderStats(); renderCards(); }
+
+/* ══ SEED DEMO DATA ══ */
+function seedDemo() {
+  if(db.students.length>0) return;
+  db.students=[
+    {id:'d1',name:'Arjun Mehta',dob:'2012-03-15',avatar:'👦',school:'Delhi Public School',board:'CBSE',grade:'7th',fee:2500,subjects:['Maths','Science','English'],parent:'Priya Mehta',wa:'919876543210',att:92,marks:88,pay:'Paid',status:'Active',enroll:'2024-06-01',notes:'Needs help with fractions'},
+    {id:'d2',name:'Diya Patel',dob:'2014-07-22',avatar:'👧',school:'Ryan International',board:'ICSE',grade:'5th',fee:2000,subjects:['English','Hindi','Drawing'],parent:'Rajesh Patel',wa:'919123456789',att:88,marks:76,pay:'Paid',status:'Active',enroll:'2024-07-15',notes:'Very creative'},
+    {id:'d3',name:'Kabir Singh',dob:'2011-11-08',avatar:'🦁',school:'Kendriya Vidyalaya',board:'CBSE',grade:'8th',fee:3000,subjects:['Maths','Science','Social Studies'],parent:'Mandeep Singh',wa:'919988776655',att:75,marks:65,pay:'Pending',status:'Active',enroll:'2024-04-01',notes:''}
+  ];
+  db.links={'d1':[{id:'l1',url:'https://ncert.nic.in',label:'NCERT Class 7 Maths'}]};
+  saveDB();
+}
+
+/* ══ INIT ══ */
+loadAll();
+checkSetup();
+seedDemo();
+refresh();
+</script>
 </body>
 </html>
