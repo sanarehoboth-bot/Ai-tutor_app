@@ -676,7 +676,7 @@ function renderCards() {
     const links  = db.links[s.id]||[];
     // WhatsApp uses TUTOR's info for parent communication
     const waNum  = (s.wa||'').replace(/\D/g,'');
-    const waMsg  = encodeURIComponent('Hello! This is a progress update for ' + s.name + ' from ' + (tutor.name||'your tutor') + '. Attendance this month: ' + att + '%. Latest marks: ' + marks + '%. Fee status: ' + s.pay + '. Please pay monthly fees to UPI: ' + (tutor.upi||'contact tutor') + '. Thank you!');
+    const waMsg  = encodeURIComponent(`Hi! Progress update for ${s.name} from ${tutor.name||'TutorBuddy Pro Hub'}.\n\nAttendance: ${att}%\nMarks: ${marks}%\nFee Status: ${s.pay}\n\nPlease pay fees to UPI: ${tutor.upi||'—'}`);
     const waHref = waNum?`https://wa.me/${waNum}?text=${waMsg}`:'#';
 
     const linksList = links.length>0
