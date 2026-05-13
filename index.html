@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+  (function() {
+    var accessKey = 'TUTOR2026'; // This is your new password
+    var userKey = prompt("Tutor Buddy: Please enter your Access Key to continue:");
+    
+    if (userKey !== accessKey) {
+      alert("Invalid key. Access denied.");
+      document.body.innerHTML = "<h1>Access Denied</h1><p>Contact the owner for a valid key.</p>";
+      window.stop(); 
+    }
+  })();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TutorBuddy Pro Hub — Learning Management Platform</title>
